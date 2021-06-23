@@ -19,6 +19,8 @@ class LoginVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loginButton.btnCorner()
+        hideKeyboardWhenTappedAround()
+        textfieldDelegates()
     }
     
     //MARK: - JsonRequest
@@ -29,7 +31,6 @@ class LoginVC: UIViewController {
         networkingService.requestLogin(endpoint: "/signin", loginObject: login) { [weak self] (result) in
             
             switch result {
-                
             case .success(let user): self?.performSegue(withIdentifier: "escolhaSegue", sender: user)
                 
             case.failure(let error):
@@ -39,7 +40,6 @@ class LoginVC: UIViewController {
             }
         }
     }
-    
     
     @IBAction func didTapLoginButton() {
         
@@ -51,4 +51,29 @@ class LoginVC: UIViewController {
         jsonRequest(email: email, password: password)
     }
     
+    func textfieldDelegates() {
+        userEmailTextField.delegate = self
+        passwordTextField.delegate = self
+    }
+    
+}
+
+extension UIViewController: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder() // dismiss keyboard
+        return true
+    }
+}
+
+extension UIViewController {
+
+    @objc func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:    #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }

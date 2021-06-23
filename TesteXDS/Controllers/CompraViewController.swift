@@ -30,15 +30,30 @@ class CompraViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configComponents()
+    }
+    
+    // Eu sei que isso não deveria estar aqui, mas não deu tempo de refatorar 😅
+    func configComponents() {
         nameLabe.text = name
+        
         pizzaImageView.sd_setImage(with: URL(string: image), completed: nil)
+        
         ratingView.backgroundColor = KAppColor.init().backGround
         ratingView.rating = rating
+        ratingView.settings.updateOnTouch = false
+        
         priceLAbel.text = "R$" + String(format: "%.2f", priceP)
+        
         pButton.btnCorner()
         mButton.btnCorner()
         gButton.btnCorner()
         
+    }
+    
+    @IBAction func voltarButton(_ sender: UIButton) {
+        self.navigationController?.popToViewController(EscolhaVC(), animated: true)
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func priceButton(_ sender: UIButton) {
